@@ -9,7 +9,7 @@ from pathlib import Path
 QUOTA_CACHE = Path.home() / ".agy-swap" / "cache" / "quota.json"
 
 CONNECT_RPC_PATH = (
-    "/google.cloud.businessaicode.v1main.PredictionService/"
+    "/exa.language_server_pb.LanguageServerService/"
     "RetrieveUserQuotaSummary"
 )
 
