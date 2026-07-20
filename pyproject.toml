@@ -1,6 +1,6 @@
 [project]
 name = "agy-swap"
-version = "0.1.0"
+version = "0.1.1"
 description = "Multi-account switcher for Antigravity CLI (agy)"
 requires-python = ">=3.10"
 dependencies = [
