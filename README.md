@@ -129,6 +129,11 @@ Quota usage appears in `agyswap list` and the TUI. Two ways to populate it:
 
   The script writes to `~/.agy-swap/cache/quota.json` which the TUI and CLI read.
 
+## Limitations
+
+- **Switch does not affect the current agy session** — agy reads its auth token at startup and caches it in memory. Switching accounts only replaces the token on disk/keychain. You must exit the current agy session (or open a new terminal) for the change to take effect. New agy invocations will pick up the swapped account.
+- **Quota data** is only available when agy is running (for the automatic TUI probe) or when using the statusline script via `agy -S`.
+
 ## How it works
 
 - Backs up OAuth tokens when you add an account (`~/.agy-swap/credentials/`)
