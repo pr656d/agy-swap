@@ -112,35 +112,21 @@ agyswap remove 2
 
 ## Quota data
 
-Quota usage appears in `agyswap list` and the TUI. Two ways to populate it:
+Quota usage is fetched directly from Google's Cloud Code Assist API using each managed account's stored OAuth token — no running agy session needed. The TUI polls every 3 seconds and updates quota for **all** managed accounts automatically.
 
-- **Automatic (TUI only)** — when agy is running, the TUI probes its local language server via ConnectRPC every 3 seconds and writes quota to cache. No setup needed.
-- **Statusline** — run `agy` with the statusline script to capture quota on every prompt:
-
-  ```bash
-  agy -S "python3 -m agyswap.statusline"
-  ```
-
-  Add it as a shell alias:
-
-  ```bash
-  alias agy='agy -S "python3 -m agyswap.statusline"'
-  ```
-
-  The script writes to `~/.agy-swap/cache/quota.json` which the TUI and CLI read.
+Per-model breakdown is stored in the cache and can be displayed by the TUI.
 
 ## Limitations
 
 - **Switch does not affect the current agy session** — agy reads its auth token at startup and caches it in memory. Switching accounts only replaces the token on disk/keychain. You must exit the current agy session (or open a new terminal) for the change to take effect. New agy invocations will pick up the swapped account.
-- **Quota data is only for the active account** — the TUI probes agy's running language server, which only knows about the currently logged-in account. Quota for other managed accounts is not available.
-- **Quota requires agy to be running** — the TUI's automatic 3s polling needs agy's language server to be active. If agy is not running, quota shows as unavailable.
+- **Switch does not affect the current agy session** — agy reads its auth token at startup and caches it in memory. Switching accounts only replaces the token on disk/keychain. You must exit the current agy session (or open a new terminal) for the change to take effect. New agy invocations will pick up the swapped account.
 
 ## How it works
 
 - Backs up OAuth tokens when you add an account (`~/.agy-swap/credentials/`)
 - Swaps only the account-specific login by replacing the active token and Google accounts file
 - Account credentials stored securely using platform-appropriate methods (macOS Keychain + file fallback)
-- Quota fetched from agy's local gRPC language server when running, or captured via the `-S` statusline mechanism
+- Quota fetched directly from Google's Cloud Code Assist API (`cloudcode-pa.googleapis.com`) using each account's stored OAuth token — no dependency on a running agy session
 
 ## Data locations
 

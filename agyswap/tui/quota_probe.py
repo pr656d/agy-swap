@@ -1,149 +1,149 @@
 from __future__ import annotations
 
 import json
-import subprocess
 import time
 import urllib.request
 from pathlib import Path
 
 QUOTA_CACHE = Path.home() / ".agy-swap" / "cache" / "quota.json"
-
-CONNECT_RPC_PATH = (
-    "/exa.language_server_pb.LanguageServerService/"
-    "RetrieveUserQuotaSummary"
-)
+QUOTA_API = "https://cloudcode-pa.googleapis.com/v1internal:retrieveUserQuota"
 
 
-def _find_agy_pid() -> str | None:
-    try:
-        r = subprocess.run(
-            ["pgrep", "-x", "agy"],
-            capture_output=True, text=True, timeout=5,
-        )
-        if r.returncode == 0 and r.stdout.strip():
-            return r.stdout.strip().splitlines()[0]
-    except (FileNotFoundError, subprocess.TimeoutExpired):
-        pass
-    return None
-
-
-def _find_ports(pid: str) -> list[int]:
-    try:
-        r = subprocess.run(
-            ["lsof", "-p", pid, "-i", "-P", "-n"],
-            capture_output=True, text=True, timeout=5,
-        )
-        ports = []
-        for line in r.stdout.splitlines():
-            if "(LISTEN)" not in line:
-                continue
-            parts = line.split()
-            if len(parts) < 9:
-                continue
-            addr = parts[8]
-            if ":" not in addr:
-                continue
-            host, port_str = addr.rsplit(":", 1)
-            if host in ("127.0.0.1", "localhost"):
-                try:
-                    ports.append(int(port_str))
-                except ValueError:
-                    pass
-        return ports
-    except (FileNotFoundError, subprocess.TimeoutExpired):
-        return []
-
-
-def _probe_connectrpc(port: int) -> dict | None:
-    url = f"http://127.0.0.1:{port}{CONNECT_RPC_PATH}"
+def _fetch_for_token(access_token: str) -> dict | None:
     req = urllib.request.Request(
-        url,
+        QUOTA_API,
         data=b"{}",
         headers={
+            "Authorization": f"Bearer {access_token}",
             "Content-Type": "application/json",
-            "Connect-Protocol-Version": "1",
         },
         method="POST",
     )
     try:
-        with urllib.request.urlopen(req, timeout=2) as resp:
-            body = json.loads(resp.read().decode("utf-8"))
-            return body
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            return json.loads(resp.read().decode("utf-8"))
     except Exception:
         return None
 
 
-def discover_and_fetch() -> dict | None:
-    pid = _find_agy_pid()
-    if pid is None:
+def _find_lowest_remaining(buckets: list[dict]) -> float:
+    if not buckets:
+        return 1.0
+    return min(b.get("remainingFraction", 1.0) for b in buckets)
+
+
+def _pick_representative_bucket(buckets: list[dict]) -> dict | None:
+    if not buckets:
         return None
-    ports = _find_ports(pid)
-    for port in ports:
-        result = _probe_connectrpc(port)
-        if result is not None and "response" in result:
-            return result
-    return None
+    for key in ("gemini-2.5-flash", "gemini-2.5-flash-lite", "gemini-2.5-pro", "gemini-3.1-flash-lite"):
+        for b in buckets:
+            if b.get("modelId") == key:
+                return b
+    return buckets[0]
 
 
-def _get_active_email() -> str | None:
-    from agyswap.paths import GOOGLE_ACCOUNTS_PATH
-    path = GOOGLE_ACCOUNTS_PATH
-    if path.exists():
-        try:
-            data = json.loads(path.read_text())
-            return data.get("active") or None
-        except (json.JSONDecodeError, OSError):
-            pass
-    return None
+def map_response(resp: dict) -> dict | None:
+    if resp is None:
+        return None
+    buckets = resp.get("buckets", [])
+    if not buckets:
+        return None
 
+    remaining = _find_lowest_remaining(buckets)
+    used_pct = round((1 - remaining) * 100, 1)
 
-def map_response(resp: dict) -> dict:
-    groups = resp.get("response", {}).get("groups", [])
+    b = _pick_representative_bucket(buckets)
+    resets_at = b.get("resetTime", "") if b else ""
 
-    by_window: dict[str, dict] = {}
-    for group in groups:
-        for bucket in group.get("buckets", []):
-            window = bucket.get("window")
-            remaining = bucket.get("remainingFraction", 1.0)
-            used_pct = round((1 - remaining) * 100, 1)
-            resets_at = bucket.get("resetTime", "")
-
-            if window and (
-                window not in by_window
-                or used_pct > by_window[window].get("used_pct", 0)
-            ):
-                by_window[window] = {
-                    "used_pct": used_pct,
-                    "resets_at": resets_at,
-                }
-
-    email = _get_active_email()
-    account_quota: dict[str, float | str] = {}
-
-    if "5h" in by_window:
-        account_quota["five_hour"] = by_window["5h"]["used_pct"]
-        account_quota["five_resets_at"] = by_window["5h"]["resets_at"]
-    if "weekly" in by_window:
-        account_quota["seven_day"] = by_window["weekly"]["used_pct"]
-        account_quota["seven_resets_at"] = by_window["weekly"]["resets_at"]
-
-    accounts: dict[str, dict] = {}
-    if email and account_quota:
-        accounts[email] = account_quota
-    elif account_quota:
-        accounts["__unknown__"] = account_quota
+    models = {}
+    for b in buckets:
+        mid = b.get("modelId", "unknown")
+        rem = b.get("remainingFraction", 1.0)
+        models[mid] = {
+            "remaining": round(rem * 100, 1),
+            "used": round((1 - rem) * 100, 1),
+            "resets_at": b.get("resetTime", ""),
+        }
 
     return {
-        "accounts": accounts,
-        "captured_at": int(time.time()),
+        "five_hour": used_pct,
+        "five_resets_at": resets_at,
+        "seven_day": used_pct,
+        "seven_resets_at": resets_at,
+        "models": models,
     }
 
 
+def _extract_access_token(token_raw: str) -> str | None:
+    try:
+        parsed = json.loads(token_raw)
+        return parsed.get("token", {}).get("access_token") or None
+    except (json.JSONDecodeError, KeyError, IndexError):
+        return None
+
+
+def _fetch_for_email(email: str, access_token: str) -> dict | None:
+    resp = _fetch_for_token(access_token)
+    if not resp:
+        return None
+    q = map_response(resp)
+    if not q:
+        return None
+    q["captured_at"] = int(time.time())
+    return q
+
+
 def fetch_and_cache() -> bool:
-    resp = discover_and_fetch()
-    if resp is None:
+    from agyswap.switcher import _read_token_backup
+    from agyswap.paths import GOOGLE_ACCOUNTS_PATH, SEQUENCE_FILE
+
+    accounts_data: dict[str, dict] = {}
+
+    active_path = GOOGLE_ACCOUNTS_PATH
+    if active_path.exists():
+        try:
+            data = json.loads(active_path.read_text())
+            active_email = data.get("active") or ""
+            if active_email:
+                from agyswap.switcher import _read_current_token
+                token = _read_current_token()
+                if token:
+                    at = _extract_access_token(token)
+                    if at:
+                        q = _fetch_for_email(active_email, at)
+                        if q:
+                            accounts_data[active_email] = q
+        except Exception:
+            pass
+
+    seq_path = SEQUENCE_FILE
+    if seq_path.exists():
+        try:
+            seq = json.loads(seq_path.read_text())
+            for num_str, acc_data in seq.get("accounts", {}).items():
+                email = acc_data.get("email", "")
+                if not email or email in accounts_data:
+                    continue
+                num = int(num_str)
+                token = _read_token_backup(num, email)
+                if not token:
+                    continue
+                at = _extract_access_token(token)
+                if not at:
+                    continue
+                q = _fetch_for_email(email, at)
+                if q:
+                    accounts_data[email] = q
+        except Exception:
+            pass
+
+    if not accounts_data:
         return False
-    quota = map_response(resp)
+
+    cache = {
+        "accounts": accounts_data,
+        "captured_at": int(time.time()),
+    }
     QUOTA_CACHE.parent.mkdir(parents=True, exist_ok=True)
-    QUOTA_CACHE.write_text(json.dumps(quota, indent=2))
+    QUOTA_CACHE.write_text(json.dumps(cache, indent=2))
     return True
