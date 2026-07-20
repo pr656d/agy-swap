@@ -1,0 +1,58 @@
+Screen {
+    background: $background;
+}
+
+#accounts-panel {
+    height: auto;
+    padding: 1 3;
+    background: $background;
+    border-bottom: solid $panel;
+}
+
+#menu-title {
+    height: 1;
+    margin-top: 1;
+    padding: 0 3;
+    color: $secondary;
+}
+
+#menu, #accounts {
+    background: $background;
+    padding: 1 2 0 1;
+    scrollbar-size-vertical: 1;
+}
+
+#menu:focus, #accounts:focus {
+    background-tint: $foreground 0%;
+}
+
+#menu ListItem, #accounts ListItem {
+    background: transparent;
+    padding: 0 1;
+    border-left: thick $background;
+}
+
+#accounts ListItem {
+    margin-bottom: 1;
+}
+
+#menu ListItem.-highlight,
+#menu:focus ListItem.-highlight,
+#accounts ListItem.-highlight,
+#accounts:focus ListItem.-highlight {
+    color: $foreground;
+    background: $surface;
+    text-style: none;
+    border-left: thick $primary;
+}
+
+#accounts ListItem.flash {
+    background: $panel;
+}
+
+#list-title {
+    height: 1;
+    margin-top: 1;
+    padding: 0 3;
+    color: $secondary;
+}
