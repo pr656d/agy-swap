@@ -27,6 +27,7 @@ class AgySwapApp(App):
         self._sw = sw
         self._start = "watch" if start_watch else "dashboard"
         self._refreshing = False
+        self.threshold_pct = None
 
     def on_mount(self) -> None:
         self.register_theme(AGY_SWAP_DARK)

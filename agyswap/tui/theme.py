@@ -2,17 +2,17 @@ from __future__ import annotations
 
 from textual.theme import Theme
 
-ACCENT = "#ffa62b"
-FOREGROUND = "#e8e4de"
-MUTED = "#8a8a8a"
+ACCENT = "#d7875f"  # warm terracotta
+FOREGROUND = "#e8e4de"  # soft, slightly warm off-white
+MUTED = "#8a8a8a"  # secondary text
 BACKGROUND = "#141414"
 SURFACE = "#1e1e1e"
 PANEL = "#262626"
 
-SEV_OK = "#87af87"
-SEV_WARN = "#d7af5f"
-SEV_CRIT = "#d75f5f"
-TRACK = "#3a3a3a"
+SEV_OK = "#87af87"  # calm green
+SEV_WARN = "#d7af5f"  # amber
+SEV_CRIT = "#d75f5f"  # soft red
+TRACK = "#3a3a3a"  # unfilled bar track
 
 WARN_PCT = 70.0
 CRIT_PCT = 90.0
@@ -48,3 +48,4 @@ AGY_SWAP_DARK = Theme(
         "block-cursor-text-style": "none",
     },
 )
+

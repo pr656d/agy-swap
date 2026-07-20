@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import time
-from datetime import datetime, timezone
+from datetime import datetime
 from typing import TYPE_CHECKING
 
 from rich.text import Text
@@ -122,11 +122,11 @@ def usage_bar(
 
 def usage_rows(acc: dict, now: float) -> list[tuple[str, float, str, str]]:
     rows: list[tuple[str, float, str, str]] = []
-    for key, label in (("five_hour", "5h"), ("seven_day", "7d")):
+    for key, label, resets_key in (("five_hour", "5h", "five"), ("seven_day", "7d", "seven")):
         pct = acc.get(f"quota_{key}")
         if pct is None:
             continue
-        resets_at = acc.get(f"quota_{key}_resets_at")
+        resets_at = acc.get(f"quota_{resets_key}_resets_at")
         reset = reset_text(resets_at, now)
         clock = reset_clock(resets_at, now) if reset else None
         suffix = reset or ""
@@ -145,10 +145,11 @@ def account_card_text(
     now = now if now is not None else time.time()
     text = Text()
     text.append(f"{acc['number']:>2}  ", style=f"bold {FOREGROUND}")
-    email = acc["email"]
-    text.append(email, style=FOREGROUND)
     if acc.get("alias"):
-        text.append(f"  ({acc['alias']})", style=f"bold {ACCENT}")
+        text.append(acc["alias"], style=f"bold {ACCENT}")
+        text.append(f" ({acc['email']})", style=FOREGROUND)
+    else:
+        text.append(acc["email"], style=FOREGROUND)
     if acc.get("active"):
         text.append("   ● active", style=f"bold {ACCENT}")
     if acc.get("disabled"):
@@ -157,13 +158,13 @@ def account_card_text(
     fetched_at = acc.get("quota_fetched_at")
     if fetched_at:
         age_s = now - float(fetched_at)
-        if age_s > STALE_OK_S:
-            text.append(f"   · {format_duration(age_s)} ago", style=MUTED)
+        if age_s > 0:
+            text.append(f"   {format_duration(age_s)} ago", style=MUTED)
 
     rows = usage_rows(acc, now)
     if not rows:
         text.append("\n    ")
-        text.append("quota: N/A  [dim](run agy to populate)[/dim]", style=MUTED)
+        text.append("quota unavailable", style=MUTED)
         return text
 
     stale = fetched_at and (now - float(fetched_at)) > STALE_OK_S
@@ -171,8 +172,7 @@ def account_card_text(
     bar_width = max(12, min(30, width - 42 - label_width))
     row_overhead = 4 + label_width + 1 + bar_width + 5 + 2
     for label, pct, suffix, suffix_full in rows:
-        per_row_overhead = row_overhead - 2 + len(suffix_full)
-        if suffix_full != suffix and per_row_overhead <= width:
+        if suffix_full != suffix and row_overhead + len(suffix_full) <= width:
             suffix = suffix_full
         text.append("\n    ")
         text.append(
@@ -191,9 +191,11 @@ def account_card_text(
 def mini_account_text(acc: dict, now: float) -> Text:
     text = Text(no_wrap=True, overflow="ellipsis")
     text.append(f"{acc['number']:>2}  ", style=f"bold {MUTED}")
-    text.append(acc["email"], style=FOREGROUND)
     if acc.get("alias"):
-        text.append(f"  ({acc['alias']})", style=ACCENT)
+        text.append(acc["alias"], style=f"bold {ACCENT}")
+        text.append(f" ({acc['email']})", style=FOREGROUND)
+    else:
+        text.append(acc["email"], style=FOREGROUND)
     if acc.get("disabled"):
         text.append("  (disabled)", style=MUTED)
     text.append("   ")
@@ -212,7 +214,8 @@ def mini_account_text(acc: dict, now: float) -> Text:
         text.append(f"{label} ", style=MUTED)
         text.append(f"{pct:.0f}%", style=f"{color} dim" if stale else color)
         if pct >= 100:
-            resets_at = acc.get(f"quota_{key}_resets_at")
+            resets_key = "five" if key == "five_hour" else "seven"
+            resets_at = acc.get(f"quota_{resets_key}_resets_at")
             reset = reset_text(resets_at, now)
             if reset:
                 text.append(f" ({reset})", style=MUTED)

@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING, Callable
 
 from textual.app import ComposeResult
 from textual.binding import Binding
-from textual.screen import ModalScreen, Screen
-from textual.widgets import Footer, Header, ListView, Static
+from textual.screen import Screen
+from textual.widgets import Footer, ListView, Static
 
 from agyswap.tui.widgets import (
     AccountItem,
@@ -22,29 +22,6 @@ FLASH_S = 1.5
 MenuEntries = list[tuple[str, str]]
 
 _BACK = ("← back", "back")
-
-
-class AccountPicker(ModalScreen):
-    BINDINGS = [Binding("escape", "cancel", "Cancel")]
-
-    def __init__(self, items: list[AccountItem], on_select: Callable):
-        super().__init__()
-        self._accounts = items
-        self._on_select = on_select
-
-    def action_cancel(self) -> None:
-        self.dismiss(None)
-
-    def compose(self) -> ComposeResult:
-        yield Header()
-        yield ListView(*self._accounts, id="picker-list")
-        yield Footer()
-
-    def on_list_view_selected(self, event: ListView.Selected) -> None:
-        item = event.item
-        if isinstance(item, AccountItem):
-            self._on_select(item)
-            self.dismiss(None)
 
 
 class DashboardScreen(Screen):
@@ -187,15 +164,8 @@ class DashboardScreen(Screen):
             actions[action_id]()
 
     def action_open_switch(self) -> None:
-        snap = self.app.snapshot
-        if not snap:
-            return
-        items = [AccountItem(r) for r in snap if not r.get("disabled")]
-
-        def on_select(item):
-            self.app.do_switch(item.number)
-
-        self.push_screen(AccountPicker(items, on_select))
+        if not isinstance(self.app.screen, SwitchScreen):
+            self.app.push_screen(SwitchScreen())
 
     async def action_menu_back(self) -> None:
         await self._pop_menu()
@@ -211,3 +181,104 @@ class DashboardScreen(Screen):
 
     def action_cursor_up(self) -> None:
         self.query_one("#menu", ListView).action_cursor_up()
+
+
+class AccountListScreen(Screen):
+    app: AgySwapApp
+
+    def __init__(self) -> None:
+        super().__init__()
+        self._numbers: list[str] = []
+        self._stamps: dict[str, float | None] = {}
+
+    def compose(self) -> ComposeResult:
+        yield Static("", id="list-title")
+        yield ListView(id="accounts")
+        yield Footer()
+
+    def on_mount(self) -> None:
+        self.watch(self.app, "snapshot", self._on_snapshot)
+
+    async def _on_snapshot(self, snap: list[dict] | None) -> None:
+        if snap is None:
+            return
+        listview = self.query_one("#accounts", ListView)
+        numbers = [str(r["number"]) for r in snap]
+        if numbers != self._numbers:
+            first_build = not self._numbers
+            previous = listview.index
+            await listview.clear()
+            await listview.extend(AccountItem(r) for r in snap)
+            self._numbers = numbers
+            listview.index = (
+                self._index_after_build(snap, first_build, previous)
+                if numbers
+                else None
+            )
+        else:
+            for item, r in zip(listview.query(AccountItem), snap):
+                item.set_account(r)
+        self._flash_updated(snap, listview)
+
+    def _index_after_build(
+        self, snap: list[dict], first_build: bool, previous: int | None
+    ) -> int | None:
+        if first_build:
+            return self._active_index(snap)
+        return min(previous or 0, len(snap) - 1)
+
+    def _active_index(self, snap: list[dict]) -> int:
+        return next(
+            (i for i, r in enumerate(snap) if r.get("active")),
+            0,
+        )
+
+    def _flash_updated(self, snap: list[dict] | None, listview: ListView) -> None:
+        if snap is None:
+            return
+        new_stamps = {str(r["number"]): r.get("quota_fetched_at") for r in snap}
+        if self._stamps:
+            changed = {
+                num
+                for num, ts in new_stamps.items()
+                if ts is not None and ts != self._stamps.get(num)
+            }
+            for item in listview.query(AccountItem):
+                if str(item.number) in changed and not item.has_class("flash"):
+                    item.add_class("flash")
+                    self.set_timer(FLASH_S, partial(item.remove_class, "flash"))
+        self._stamps = new_stamps
+
+    def action_cursor_down(self) -> None:
+        self.query_one("#accounts", ListView).action_cursor_down()
+
+    def action_cursor_up(self) -> None:
+        self.query_one("#accounts", ListView).action_cursor_up()
+
+
+class SwitchScreen(AccountListScreen):
+    BINDINGS = [
+        Binding("enter", "select_highlighted", "Switch", priority=True),
+        Binding("escape,q,s", "back", "Back"),
+        Binding("j", "cursor_down", show=False),
+        Binding("k", "cursor_up", show=False),
+    ]
+
+    def on_mount(self) -> None:
+        self.query_one("#list-title", Static).update("switch to which account?")
+        self.query_one("#accounts", ListView).focus()
+        super().on_mount()
+
+    def on_list_view_selected(self, event: ListView.Selected) -> None:
+        item = event.item
+        if isinstance(item, AccountItem):
+            self.app.do_switch(item.number)
+            self.app.pop_screen()
+
+    def action_select_highlighted(self) -> None:
+        listview = self.query_one("#accounts", ListView)
+        if listview.display:
+            listview.action_select_cursor()
+
+    def action_back(self) -> None:
+        self.app.pop_screen()
