@@ -226,9 +226,8 @@ def mini_account_text(acc: dict, now: float) -> Text:
 
 
 class AccountsPanel(Static):
-    def __init__(self, *, show_minis: bool = True, id: str | None = None) -> None:
+    def __init__(self, id: str | None = None) -> None:
         super().__init__(id=id)
-        self._show_minis = show_minis
 
     def on_mount(self) -> None:
         self.watch(self.app, "snapshot", lambda _: self.refresh(layout=True))
@@ -248,12 +247,9 @@ class AccountsPanel(Static):
         width = (self.size.width or 80) - 2
         blocks: list[Text] = []
         for r in snap:
-            if r.get("active"):
-                blocks.append(
-                    account_card_text(r, width, threshold=app.threshold_pct, now=now)
-                )
-            elif self._show_minis:
-                blocks.append(mini_account_text(r, now))
+            blocks.append(
+                account_card_text(r, width, threshold=app.threshold_pct, now=now)
+            )
         if not blocks:
             return Text("no active managed login", style=MUTED)
         text = Text()
