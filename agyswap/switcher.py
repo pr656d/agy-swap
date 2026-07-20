@@ -184,20 +184,6 @@ def _get_email_from_oauth_creds() -> Optional[str]:
         return None
 
 
-def _get_active_email(token_raw: Optional[str] = None) -> Optional[str]:
-    if token_raw:
-        email = _get_email_from_userinfo(token_raw)
-        if email:
-            return email
-    email = _get_active_email_from_agy()
-    if email:
-        return email
-    email = _get_email_from_oauth_creds()
-    if email:
-        return email
-    return None
-
-
 def _backup_path(account_num: int, email: str) -> Path:
     safe_email = email.replace("@", "_at_").replace(".", "_dot_")
     return CREDENTIALS_DIR / f".creds-{account_num}-{safe_email}.enc"
@@ -352,15 +338,17 @@ class AgySwitcher:
         if not token_raw:
             raise AgyError("No active agy token found. Login with agy first.")
 
-        active_email = email_override or _get_active_email(token_raw)
+        verified_email = _get_email_from_userinfo(token_raw)
+        active_email = email_override or verified_email or _get_active_email_from_agy() or _get_email_from_oauth_creds()
         if not active_email:
             active_email = f"account-{self._next_number()}"
 
         existing = self._find_account_by_email(active_email)
         if existing:
-            _save_token_backup(existing.number, active_email, token_raw)
-            existing.updated_at = now_iso()
-            self._save_sequence()
+            if verified_email:
+                _save_token_backup(existing.number, active_email, token_raw)
+                existing.updated_at = now_iso()
+                self._save_sequence()
             return existing
 
         num = self._next_number()
@@ -423,20 +411,29 @@ class AgySwitcher:
                 f"Login with agy and run 'agyswap add' first."
             )
 
-        active_email = _get_active_email_from_agy()
-        if active_email:
-            existing = self._find_account_by_email(active_email)
-            if existing:
-                current_token = _read_current_token()
-                if current_token:
-                    _save_token_backup(existing.number, active_email, current_token)
+        target_verified = _get_email_from_userinfo(token_raw)
+        if target_verified and target_verified != target.email:
+            raise AgyError(
+                f"Stored token for {target.email} actually belongs to "
+                f"{target_verified}. Login to {target.email} in agy and "
+                f"run 'agyswap add' to fix."
+            )
+
+        previous_email = _get_active_email_from_agy()
+        current_token = _read_current_token()
+        if current_token:
+            current_verified = _get_email_from_userinfo(current_token)
+            if current_verified:
+                existing = self._find_account_by_email(current_verified)
+                if existing:
+                    _save_token_backup(existing.number, current_verified, current_token)
 
         _write_current_token(token_raw)
         _write_google_accounts({"active": target.email, "old": []})
         self._seq.active_email = target.email
         self._save_sequence()
         return {
-            "previous": active_email,
+            "previous": previous_email,
             "active": target.email,
             "number": target.number,
         }
