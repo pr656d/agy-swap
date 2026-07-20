@@ -185,16 +185,16 @@ def _get_email_from_oauth_creds() -> Optional[str]:
 
 
 def _get_active_email(token_raw: Optional[str] = None) -> Optional[str]:
+    if token_raw:
+        email = _get_email_from_userinfo(token_raw)
+        if email:
+            return email
     email = _get_active_email_from_agy()
     if email:
         return email
     email = _get_email_from_oauth_creds()
     if email:
         return email
-    if token_raw:
-        email = _get_email_from_userinfo(token_raw)
-        if email:
-            return email
     return None
 
 
