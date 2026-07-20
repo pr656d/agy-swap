@@ -173,6 +173,10 @@ pipx uninstall agy-swap
 - Antigravity CLI (agy) installed and logged in
 - macOS, Linux
 
+## Acknowledgements
+
+Inspired by [claude-swap](https://github.com/realiti4/claude-swap) — multi-account switcher for Claude Code.
+
 ## License
 
 MIT
