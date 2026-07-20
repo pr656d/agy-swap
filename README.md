@@ -16,13 +16,6 @@ uv tool install agy-swap
 pipx install agy-swap
 ```
 
-### With TUI dashboard
-
-```bash
-uv tool install 'agy-swap[tui]'       # uv
-pipx install 'agy-swap[tui]'          # pipx
-```
-
 ### From source
 
 ```bash
