@@ -132,7 +132,8 @@ Quota usage appears in `agyswap list` and the TUI. Two ways to populate it:
 ## Limitations
 
 - **Switch does not affect the current agy session** — agy reads its auth token at startup and caches it in memory. Switching accounts only replaces the token on disk/keychain. You must exit the current agy session (or open a new terminal) for the change to take effect. New agy invocations will pick up the swapped account.
-- **Quota data** is only available when agy is running (for the automatic TUI probe) or when using the statusline script via `agy -S`.
+- **Quota data is only for the active account** — the TUI probes agy's running language server, which only knows about the currently logged-in account. Quota for other managed accounts is not available.
+- **Quota requires agy to be running** — the TUI's automatic 3s polling needs agy's language server to be active. If agy is not running, quota shows as unavailable.
 
 ## How it works
 
