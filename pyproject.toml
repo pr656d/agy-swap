@@ -19,5 +19,9 @@ build-backend = "setuptools.build_meta"
 [tool.setuptools.packages.find]
 where = ["."]
 
+[project.urls]
+Homepage = "https://github.com/pr656d/agy-swap"
+Repository = "https://github.com/pr656d/agy-swap"
+
 [tool.setuptools.package-data]
 agyswap = ["tui/*.tcss"]

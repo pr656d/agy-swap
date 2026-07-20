@@ -1,45 +1,178 @@
 # agy-swap
 
-Multi-account switcher for [Antigravity CLI](https://gemini.google.com/code/) (agy).
-
-Manage multiple agy accounts, switch between them, and monitor your Gemini API quota — all from the command line or an interactive TUI dashboard.
-
-## Features
-
-- **Account switching** — rotate through accounts or switch by number/email/alias
-- **Clipboard account IDs** — copy account IDs for paste into other contexts
-- **TUI dashboard** — real-time account status, quota bars, and watch mode in a terminal UI
-- **Quota monitoring** — see your 5-hour and weekly usage at a glance (via `agy` statusline or direct language server probe)
-- **Aliases** — give accounts human-readable names
-- **Disable/enable** — hold accounts out of rotation without removing them
-- **Secure token storage** — credentials backed up to `~/.agy-swap/credentials/`
+Multi-account switcher for Antigravity CLI (agy). Easily switch between multiple Google/Gemini accounts without logging out. Track Gemini API quota for every account in a live TUI dashboard.
 
 ## Installation
+
+### Using uv (recommended)
+
+```bash
+uv tool install agy-swap
+```
+
+### Using pipx
+
+```bash
+pipx install agy-swap
+```
+
+### With TUI dashboard
+
+```bash
+uv tool install 'agy-swap[tui]'       # uv
+pipx install 'agy-swap[tui]'          # pipx
+```
+
+### From source
 
 ```bash
 git clone https://github.com/pr656d/agy-swap.git
 cd agy-swap
-pip install -e .          # CLI only
-pip install -e ".[tui]"   # with TUI dashboard
+uv sync
+uv run agyswap help
+```
+
+### Updating
+
+```bash
+uv tool upgrade agy-swap       # uv
+pipx upgrade agy-swap          # pipx
 ```
 
 ## Usage
 
+### Add your first account
+
+Log into agy with your first account, then:
+
 ```bash
-agyswap add              # capture current agy login
-agyswap list             # list managed accounts
-agyswap switch           # rotate to next account
-agyswap switch 2         # switch to account #2
-agyswap disable 2        # hold account out of rotation
-agyswap enable 2         # return to rotation
-agyswap alias 2 work     # set an alias
-agyswap tui              # interactive dashboard
-agyswap watch            # watch mode dashboard
+agyswap add
+```
+
+### Add more accounts
+
+Log in with another account, then:
+
+```bash
+agyswap add
+```
+
+### Switch accounts
+
+Rotate to the next enabled account:
+
+```bash
+agyswap switch
+```
+
+Or switch to a specific account:
+
+```bash
+agyswap switch 2
+agyswap switch user@gmail.com
+agyswap switch work               # by alias, once set with `agyswap alias 2 work`
+```
+
+See them all at a glance:
+
+```bash
+agyswap list
+```
+
+### Interactive dashboard (TUI)
+
+Run `agyswap tui` for the full-screen dashboard — every account's 5-hour and weekly usage with live progress bars, reset times, and switching, all keyboard-driven. `agyswap watch` opens it straight to the live monitor.
+
+Keyboard shortcuts from the dashboard:
+
+| Key | Action |
+|-----|--------|
+| `s` | Open account picker to switch |
+| `w` | Switch to watch screen |
+| `a` | Add current account |
+| `f` | Refresh |
+| `j`/`k` | Navigate menu |
+| `q` | Quit |
+
+### Aliases
+
+```bash
+agyswap alias 2 work            # give account 2 the alias "work"
+agyswap alias 2 --unset         # remove alias
+agyswap alias                   # list all aliases
+```
+
+### Disable / enable
+
+Hold an account out of rotation without removing its credentials:
+
+```bash
+agyswap disable 2
+agyswap enable 2
+```
+
+### Remove an account
+
+```bash
+agyswap remove 2
 ```
 
 ## Quota data
 
-Quota can be captured two ways:
+Quota usage appears in `agyswap list` and the TUI. Two ways to populate it:
 
-- **Automatically** — the TUI probes agy's local language server via ConnectRPC on each refresh cycle (when agy is running).
-- **Via statusline** — run `agy -S "python3 -m agyswap.statusline"` to write quota to `~/.agy-swap/cache/quota.json`.
+- **Automatic (TUI only)** — when agy is running, the TUI probes its local language server via ConnectRPC every 3 seconds and writes quota to cache. No setup needed.
+- **Statusline** — run `agy` with the statusline script to capture quota on every prompt:
+
+  ```bash
+  agy -S "python3 -m agyswap.statusline"
+  ```
+
+  Add it as a shell alias:
+
+  ```bash
+  alias agy='agy -S "python3 -m agyswap.statusline"'
+  ```
+
+  The script writes to `~/.agy-swap/cache/quota.json` which the TUI and CLI read.
+
+## How it works
+
+- Backs up OAuth tokens when you add an account (`~/.agy-swap/credentials/`)
+- Swaps only the account-specific login by replacing the active token and Google accounts file
+- Account credentials stored securely using platform-appropriate methods (macOS Keychain + file fallback)
+- Quota fetched from agy's local gRPC language server when running, or captured via the `-S` statusline mechanism
+
+## Data locations
+
+| Data | Path |
+|------|------|
+| Credential backups | `~/.agy-swap/credentials/` |
+| Account registry | `~/.agy-swap/sequence.json` |
+| Quota cache | `~/.agy-swap/cache/quota.json` |
+
+## Uninstall
+
+Remove all data:
+
+```bash
+rm -rf ~/.agy-swap
+```
+
+Then uninstall the tool:
+
+```bash
+uv tool uninstall agy-swap
+# or
+pipx uninstall agy-swap
+```
+
+## Requirements
+
+- Python 3.10+
+- Antigravity CLI (agy) installed and logged in
+- macOS, Linux
+
+## License
+
+MIT
