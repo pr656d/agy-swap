@@ -1,28 +1,22 @@
-# Graph Report - graphify-init-agy-20260724-132553  (2026-07-24)
+# Graph Report - .  (2026-07-24)
 
 ## Corpus Check
-- 16 files · ~5,802 words
-- Verdict: corpus is large enough that graph structure adds value.
+- Corpus is ~5,802 words - fits in a single context window. You may not need a graph.
 
 ## Summary
 - 199 nodes · 419 edges · 10 communities (9 shown, 1 thin omitted)
 - Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 27 edges (avg confidence: 0.52)
 - Token cost: 0 input · 0 output
 
-## Graph Freshness
-- Built from commit: `781f420f`
-- Run `git rev-parse HEAD` and compare to check if the graph is stale.
-- Run `graphify update .` after code changes (no API cost).
-
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Community 0|Community 0]]
-- [[_COMMUNITY_Community 1|Community 1]]
-- [[_COMMUNITY_Community 2|Community 2]]
-- [[_COMMUNITY_Community 3|Community 3]]
-- [[_COMMUNITY_Community 4|Community 4]]
-- [[_COMMUNITY_Community 5|Community 5]]
-- [[_COMMUNITY_Community 6|Community 6]]
-- [[_COMMUNITY_Community 9|Community 9]]
+- [[_COMMUNITY_Account Storage Core|Account Storage Core]]
+- [[_COMMUNITY_Dashboard Screens|Dashboard Screens]]
+- [[_COMMUNITY_Widget Styling|Widget Styling]]
+- [[_COMMUNITY_App and Watch Flow|App and Watch Flow]]
+- [[_COMMUNITY_README Guide|README Guide]]
+- [[_COMMUNITY_CLI Commands|CLI Commands]]
+- [[_COMMUNITY_Quota Probe Logic|Quota Probe Logic]]
+- [[_COMMUNITY_Package Metadata|Package Metadata]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `AgySwitcher` - 34 edges
@@ -55,31 +49,31 @@
 
 ## Communities (10 total, 1 thin omitted)
 
-### Community 0 - "Community 0"
+### Community 0 - "Account Storage Core"
 Cohesion: 0.11
 Nodes (24): Account, now_iso(), SequenceData, AccountNotFoundError, AgyError, _atomic_write(), _backup_path(), _delete_token_backup() (+16 more)
 
-### Community 1 - "Community 1"
+### Community 1 - "Dashboard Screens"
 Cohesion: 0.09
 Nodes (9): AccountListScreen, DashboardScreen, SwitchScreen, AccountItem, MenuItem, ListItem, MenuEntries, Screen (+1 more)
 
-### Community 2 - "Community 2"
+### Community 2 - "Widget Styling"
 Cohesion: 0.14
 Nodes (15): severity_color(), account_card_text(), AccountCard, AccountsPanel, bar_cells(), format_duration(), mini_account_text(), reset_clock() (+7 more)
 
-### Community 3 - "Community 3"
+### Community 3 - "App and Watch Flow"
 Cohesion: 0.11
 Nodes (3): AgySwapApp, WatchScreen, App
 
-### Community 4 - "Community 4"
+### Community 4 - "README Guide"
 Cohesion: 0.09
 Nodes (22): Acknowledgements, Add more accounts, Add your first account, agy-swap, Aliases, Data locations, Disable / enable, From source (+14 more)
 
-### Community 5 - "Community 5"
+### Community 5 - "CLI Commands"
 Cohesion: 0.18
 Nodes (15): cmd_add(), cmd_alias(), cmd_disable(), cmd_enable(), cmd_list(), cmd_remove(), cmd_status(), cmd_statusline() (+7 more)
 
-### Community 6 - "Community 6"
+### Community 6 - "Quota Probe Logic"
 Cohesion: 0.39
 Nodes (7): _extract_access_token(), fetch_and_cache(), _fetch_for_email(), _fetch_for_token(), _find_lowest_remaining(), map_response(), _pick_representative_bucket()
 
@@ -91,11 +85,11 @@ Nodes (7): _extract_access_token(), fetch_and_cache(), _fetch_for_email(), _fetc
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `AgySwapApp` connect `Community 3` to `Community 1`, `Community 2`, `Community 5`, `Community 6`?**
+- **Why does `AgySwapApp` connect `App and Watch Flow` to `Dashboard Screens`, `Widget Styling`, `CLI Commands`, `Quota Probe Logic`?**
   _High betweenness centrality (0.308) - this node is a cross-community bridge._
-- **Why does `run_tui()` connect `Community 5` to `Community 1`, `Community 3`?**
+- **Why does `run_tui()` connect `CLI Commands` to `Dashboard Screens`, `App and Watch Flow`?**
   _High betweenness centrality (0.264) - this node is a cross-community bridge._
-- **Why does `DashboardScreen` connect `Community 1` to `Community 2`, `Community 3`?**
+- **Why does `DashboardScreen` connect `Dashboard Screens` to `Widget Styling`, `App and Watch Flow`?**
   _High betweenness centrality (0.170) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `AgySwitcher` (e.g. with `Account` and `SequenceData`) actually correct?**
   _`AgySwitcher` has 2 INFERRED edges - model-reasoned connections that need verification._

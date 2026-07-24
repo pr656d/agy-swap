@@ -1,12 +1,1 @@
-{
-  "0": "Community 0",
-  "1": "Community 1",
-  "2": "Community 2",
-  "3": "Community 3",
-  "4": "Community 4",
-  "5": "Community 5",
-  "6": "Community 6",
-  "7": "Community 7",
-  "8": "Community 8",
-  "9": "Community 9"
-}
+{"0": "Account Storage Core", "1": "Dashboard Screens", "2": "Widget Styling", "3": "App and Watch Flow", "4": "README Guide", "5": "CLI Commands", "6": "Quota Probe Logic", "7": "Root Package Init", "8": "TUI Package Init", "9": "Package Metadata"}

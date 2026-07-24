@@ -1,0 +1,381 @@
+{
+  "communities": {
+    "0": [
+      "agyswap_models",
+      "agyswap_models_account",
+      "agyswap_models_now_iso",
+      "agyswap_models_sequencedata",
+      "agyswap_models_sequencedata_from_dict",
+      "agyswap_models_sequencedata_to_dict",
+      "agyswap_paths",
+      "agyswap_switcher",
+      "agyswap_switcher_accountnotfounderror",
+      "agyswap_switcher_agyerror",
+      "agyswap_switcher_agyswitcher_activate",
+      "agyswap_switcher_agyswitcher_add_current",
+      "agyswap_switcher_agyswitcher_alias",
+      "agyswap_switcher_agyswitcher_find_account_by_email",
+      "agyswap_switcher_agyswitcher_find_account_by_number",
+      "agyswap_switcher_agyswitcher_list_accounts",
+      "agyswap_switcher_agyswitcher_load_sequence",
+      "agyswap_switcher_agyswitcher_quota_for_email",
+      "agyswap_switcher_agyswitcher_remove_account",
+      "agyswap_switcher_agyswitcher_resolve_account",
+      "agyswap_switcher_agyswitcher_rotate",
+      "agyswap_switcher_agyswitcher_save_sequence",
+      "agyswap_switcher_agyswitcher_set_disabled",
+      "agyswap_switcher_agyswitcher_status",
+      "agyswap_switcher_agyswitcher_switch",
+      "agyswap_switcher_agyswitcher_unalias",
+      "agyswap_switcher_atomic_write",
+      "agyswap_switcher_backup_path",
+      "agyswap_switcher_delete_keychain_token",
+      "agyswap_switcher_delete_token_backup",
+      "agyswap_switcher_get_active_email_from_agy",
+      "agyswap_switcher_get_email_from_oauth_creds",
+      "agyswap_switcher_get_email_from_userinfo",
+      "agyswap_switcher_read_current_token",
+      "agyswap_switcher_read_google_accounts",
+      "agyswap_switcher_read_json",
+      "agyswap_switcher_read_keychain_token",
+      "agyswap_switcher_read_quota_cache",
+      "agyswap_switcher_read_token_backup",
+      "agyswap_switcher_save_token_backup",
+      "agyswap_switcher_write_current_token",
+      "agyswap_switcher_write_google_accounts",
+      "agyswap_switcher_write_json",
+      "agyswap_switcher_write_keychain_token",
+      "exception",
+      "path"
+    ],
+    "1": [
+      "agyswap_tui_app",
+      "agyswap_tui_dashboard",
+      "agyswap_tui_dashboard_accountlistscreen",
+      "agyswap_tui_dashboard_accountlistscreen_action_cursor_down",
+      "agyswap_tui_dashboard_accountlistscreen_action_cursor_up",
+      "agyswap_tui_dashboard_accountlistscreen_active_index",
+      "agyswap_tui_dashboard_accountlistscreen_flash_updated",
+      "agyswap_tui_dashboard_accountlistscreen_index_after_build",
+      "agyswap_tui_dashboard_accountlistscreen_init",
+      "agyswap_tui_dashboard_accountlistscreen_on_mount",
+      "agyswap_tui_dashboard_accountlistscreen_on_snapshot",
+      "agyswap_tui_dashboard_dashboardscreen",
+      "agyswap_tui_dashboard_dashboardscreen_action_add",
+      "agyswap_tui_dashboard_dashboardscreen_action_cursor_down",
+      "agyswap_tui_dashboard_dashboardscreen_action_cursor_up",
+      "agyswap_tui_dashboard_dashboardscreen_action_menu_back",
+      "agyswap_tui_dashboard_dashboardscreen_action_open_switch",
+      "agyswap_tui_dashboard_dashboardscreen_action_refresh",
+      "agyswap_tui_dashboard_dashboardscreen_disable_entries",
+      "agyswap_tui_dashboard_dashboardscreen_dispatch",
+      "agyswap_tui_dashboard_dashboardscreen_init",
+      "agyswap_tui_dashboard_dashboardscreen_on_list_view_selected",
+      "agyswap_tui_dashboard_dashboardscreen_on_mount",
+      "agyswap_tui_dashboard_dashboardscreen_on_snapshot",
+      "agyswap_tui_dashboard_dashboardscreen_pop_menu",
+      "agyswap_tui_dashboard_dashboardscreen_push_menu",
+      "agyswap_tui_dashboard_dashboardscreen_remove_entries",
+      "agyswap_tui_dashboard_dashboardscreen_render_menu",
+      "agyswap_tui_dashboard_dashboardscreen_root_entries",
+      "agyswap_tui_dashboard_switchscreen",
+      "agyswap_tui_dashboard_switchscreen_action_back",
+      "agyswap_tui_dashboard_switchscreen_action_select_highlighted",
+      "agyswap_tui_dashboard_switchscreen_on_list_view_selected",
+      "agyswap_tui_dashboard_switchscreen_on_mount",
+      "agyswap_tui_watch",
+      "agyswap_tui_widgets_accountitem",
+      "agyswap_tui_widgets_accountitem_set_account",
+      "agyswap_tui_widgets_menuitem",
+      "listitem",
+      "menuentries",
+      "screen",
+      "selected"
+    ],
+    "2": [
+      "agyswap_tui_dashboard_accountlistscreen_compose",
+      "agyswap_tui_dashboard_dashboardscreen_compose",
+      "agyswap_tui_dashboard_dashboardscreen_flash_updated",
+      "agyswap_tui_theme",
+      "agyswap_tui_theme_severity_color",
+      "agyswap_tui_widgets",
+      "agyswap_tui_widgets_account_card_text",
+      "agyswap_tui_widgets_accountcard",
+      "agyswap_tui_widgets_accountcard_init",
+      "agyswap_tui_widgets_accountcard_render",
+      "agyswap_tui_widgets_accountcard_set_account",
+      "agyswap_tui_widgets_accountitem_init",
+      "agyswap_tui_widgets_accountspanel",
+      "agyswap_tui_widgets_accountspanel_init",
+      "agyswap_tui_widgets_accountspanel_on_mount",
+      "agyswap_tui_widgets_accountspanel_render",
+      "agyswap_tui_widgets_bar_cells",
+      "agyswap_tui_widgets_format_duration",
+      "agyswap_tui_widgets_menuitem_init",
+      "agyswap_tui_widgets_mini_account_text",
+      "agyswap_tui_widgets_reset_clock",
+      "agyswap_tui_widgets_reset_text",
+      "agyswap_tui_widgets_usage_bar",
+      "agyswap_tui_widgets_usage_rows",
+      "composeresult",
+      "listview",
+      "static",
+      "text"
+    ],
+    "3": [
+      "agyswap_tui_app_agyswapapp",
+      "agyswap_tui_app_agyswapapp_action_open_watch",
+      "agyswap_tui_app_agyswapapp_action_refresh_full",
+      "agyswap_tui_app_agyswapapp_apply_snapshot",
+      "agyswap_tui_app_agyswapapp_do_add_current",
+      "agyswap_tui_app_agyswapapp_do_remove",
+      "agyswap_tui_app_agyswapapp_do_switch",
+      "agyswap_tui_app_agyswapapp_do_toggle_disabled",
+      "agyswap_tui_app_agyswapapp_init",
+      "agyswap_tui_app_agyswapapp_on_mount",
+      "agyswap_tui_app_agyswapapp_on_worker_state_changed",
+      "agyswap_tui_app_agyswapapp_refresh_done",
+      "agyswap_tui_app_agyswapapp_request_refresh",
+      "agyswap_tui_app_agyswapapp_tick",
+      "agyswap_tui_watch_watchscreen",
+      "agyswap_tui_watch_watchscreen_action_back",
+      "agyswap_tui_watch_watchscreen_action_nav_down",
+      "agyswap_tui_watch_watchscreen_action_nav_up",
+      "agyswap_tui_watch_watchscreen_action_select_highlighted",
+      "agyswap_tui_watch_watchscreen_action_toggle_select",
+      "agyswap_tui_watch_watchscreen_check_action",
+      "agyswap_tui_watch_watchscreen_index_after_build",
+      "agyswap_tui_watch_watchscreen_init",
+      "agyswap_tui_watch_watchscreen_on_list_view_selected",
+      "agyswap_tui_watch_watchscreen_on_mount",
+      "agyswap_tui_watch_watchscreen_set_selecting",
+      "app"
+    ],
+    "4": [
+      "readme",
+      "readme_acknowledgements",
+      "readme_add_more_accounts",
+      "readme_add_your_first_account",
+      "readme_agy_swap",
+      "readme_aliases",
+      "readme_data_locations",
+      "readme_disable_enable",
+      "readme_from_source",
+      "readme_how_it_works",
+      "readme_installation",
+      "readme_interactive_dashboard_tui",
+      "readme_license",
+      "readme_limitations",
+      "readme_quota_data",
+      "readme_remove_an_account",
+      "readme_requirements",
+      "readme_switch_accounts",
+      "readme_uninstall",
+      "readme_updating",
+      "readme_usage",
+      "readme_using_pipx",
+      "readme_using_uv_recommended"
+    ],
+    "5": [
+      "agyswap_cli",
+      "agyswap_cli_cmd_add",
+      "agyswap_cli_cmd_alias",
+      "agyswap_cli_cmd_disable",
+      "agyswap_cli_cmd_enable",
+      "agyswap_cli_cmd_list",
+      "agyswap_cli_cmd_remove",
+      "agyswap_cli_cmd_status",
+      "agyswap_cli_cmd_statusline",
+      "agyswap_cli_cmd_switch",
+      "agyswap_cli_cmd_tui",
+      "agyswap_cli_cmd_watch",
+      "agyswap_cli_main",
+      "agyswap_main",
+      "agyswap_statusline",
+      "agyswap_statusline_main",
+      "agyswap_switcher_agyswitcher",
+      "agyswap_switcher_agyswitcher_ensure_dirs",
+      "agyswap_switcher_agyswitcher_init",
+      "agyswap_switcher_agyswitcher_next_number",
+      "agyswap_tui_app_run_tui"
+    ],
+    "6": [
+      "agyswap_tui_app_agyswapapp_refresh_blocking",
+      "agyswap_tui_quota_probe",
+      "agyswap_tui_quota_probe_extract_access_token",
+      "agyswap_tui_quota_probe_fetch_and_cache",
+      "agyswap_tui_quota_probe_fetch_for_email",
+      "agyswap_tui_quota_probe_fetch_for_token",
+      "agyswap_tui_quota_probe_find_lowest_remaining",
+      "agyswap_tui_quota_probe_map_response",
+      "agyswap_tui_quota_probe_pick_representative_bucket"
+    ],
+    "7": [
+      "agyswap_init"
+    ],
+    "8": [
+      "agyswap_tui_init"
+    ],
+    "9": [
+      "pkg_agy_swap"
+    ]
+  },
+  "cohesion": {
+    "0": 0.1072463768115942,
+    "1": 0.09059233449477352,
+    "2": 0.14285714285714285,
+    "3": 0.10826210826210826,
+    "4": 0.08695652173913043,
+    "5": 0.1761904761904762,
+    "6": 0.3888888888888889,
+    "7": 1.0,
+    "8": 1.0,
+    "9": 1.0
+  },
+  "gods": [
+    {
+      "id": "agyswap_switcher_agyswitcher",
+      "label": "AgySwitcher",
+      "degree": 34
+    },
+    {
+      "id": "agyswap_tui_app_agyswapapp",
+      "label": "AgySwapApp",
+      "degree": 28
+    },
+    {
+      "id": "agyswap_tui_dashboard_dashboardscreen",
+      "label": "DashboardScreen",
+      "degree": 27
+    },
+    {
+      "id": "agyswap_tui_dashboard_accountlistscreen",
+      "label": "AccountListScreen",
+      "degree": 18
+    },
+    {
+      "id": "agyswap_tui_watch_watchscreen",
+      "label": "WatchScreen",
+      "degree": 18
+    },
+    {
+      "id": "agyswap_models_account",
+      "label": "Account",
+      "degree": 14
+    },
+    {
+      "id": "agyswap_tui_widgets_accountitem",
+      "label": "AccountItem",
+      "degree": 12
+    },
+    {
+      "id": "agyswap_tui_dashboard_switchscreen",
+      "label": "SwitchScreen",
+      "degree": 11
+    },
+    {
+      "id": "agyswap_tui_widgets_accountspanel",
+      "label": "AccountsPanel",
+      "degree": 11
+    },
+    {
+      "id": "readme_agy_swap",
+      "label": "agy-swap",
+      "degree": 11
+    }
+  ],
+  "surprises": [
+    {
+      "source": "AgySwitcher",
+      "target": "Account",
+      "source_files": [
+        "agyswap/switcher.py",
+        "agyswap/models.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "AgySwitcher",
+      "target": "SequenceData",
+      "source_files": [
+        "agyswap/switcher.py",
+        "agyswap/models.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "AgySwapApp",
+      "target": "DashboardScreen",
+      "source_files": [
+        "agyswap/tui/app.py",
+        "agyswap/tui/dashboard.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "AccountListScreen",
+      "target": "AgySwapApp",
+      "source_files": [
+        "agyswap/tui/dashboard.py",
+        "agyswap/tui/app.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "SwitchScreen",
+      "target": "AgySwapApp",
+      "source_files": [
+        "agyswap/tui/dashboard.py",
+        "agyswap/tui/app.py"
+      ],
+      "confidence": "INFERRED",
+      "relation": "uses",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `AgySwapApp` connect `App and Watch Flow` to `Dashboard Screens`, `Widget Styling`, `CLI Commands`, `Quota Probe Logic`?",
+      "why": "High betweenness centrality (0.308) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `run_tui()` connect `CLI Commands` to `Dashboard Screens`, `App and Watch Flow`?",
+      "why": "High betweenness centrality (0.264) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `DashboardScreen` connect `Dashboard Screens` to `Widget Styling`, `App and Watch Flow`?",
+      "why": "High betweenness centrality (0.170) - this node is a cross-community bridge."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 2 inferred relationships involving `AgySwitcher` (e.g. with `Account` and `SequenceData`) actually correct?",
+      "why": "`AgySwitcher` has 2 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 8 inferred relationships involving `AgySwapApp` (e.g. with `DashboardScreen` and `WatchScreen`) actually correct?",
+      "why": "`AgySwapApp` has 8 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 4 inferred relationships involving `DashboardScreen` (e.g. with `AgySwapApp` and `AccountItem`) actually correct?",
+      "why": "`DashboardScreen` has 4 INFERRED edges - model-reasoned connections that need verification."
+    },
+    {
+      "type": "verify_inferred",
+      "question": "Are the 5 inferred relationships involving `AccountListScreen` (e.g. with `AgySwapApp` and `AccountItem`) actually correct?",
+      "why": "`AccountListScreen` has 5 INFERRED edges - model-reasoned connections that need verification."
+    }
+  ]
+}
